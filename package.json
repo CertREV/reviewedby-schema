@@ -1,0 +1,50 @@
+{
+  "name": "reviewedby-schema",
+  "version": "0.1.0",
+  "description": "Generate standards-correct reviewedBy / E-E-A-T JSON-LD for content provenance. MIT-licensed, by CertREV.",
+  "type": "module",
+  "main": "src/index.js",
+  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./src/index.js"
+    }
+  },
+  "files": [
+    "src",
+    "types",
+    "examples",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "json-ld",
+    "schema-org",
+    "e-e-a-t",
+    "eeat",
+    "structured-data",
+    "seo",
+    "aeo",
+    "geo",
+    "ai-search",
+    "reviewedby",
+    "provenance"
+  ],
+  "homepage": "https://certrev.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CertREV/reviewedby-schema.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CertREV/reviewedby-schema/issues"
+  },
+  "author": "CertREV (https://certrev.com)",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
