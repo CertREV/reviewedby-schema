@@ -17,7 +17,7 @@ export interface OrganizationInput {
 export interface CredentialInput {
   /** e.g. "Board Certified in Dermatology" */
   name?: string
-  /** e.g. "license" | "certification" — see CREDENTIAL_CATEGORIES */
+  /** e.g. "license" | "certification". See CREDENTIAL_CATEGORIES */
   category?: CredentialCategory
   /** The issuing board / authority that recognized the credential. */
   recognizedBy?: OrganizationInput
