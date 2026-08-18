@@ -1,0 +1,31 @@
+name: CI
+
+# The publish workflow runs `npm test`, but only at tag time -- which is after review, after merge,
+# and after the version number is already decided. PR #2 merged into this repo with zero checks
+# reported, because nothing ran on pull requests at all. This is that gate.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The floor this package advertises in `engines`, and current. If 18 ever stops passing,
+        # that is a breaking change for consumers and the matrix should be what says so -- not a
+        # bug report from someone who believed the engines field.
+        node-version: ['18', '24']
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+      # Zero dependencies and no lockfile by design, so there is nothing to install.
+      - run: npm test
