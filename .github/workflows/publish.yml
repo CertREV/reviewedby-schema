@@ -1,0 +1,54 @@
+name: Publish
+
+# Why this exists: 0.1.0 sat on npm for seven weeks telling people to install from a git URL,
+# because nothing published this package. It had been hand-published once and then forgotten, and
+# a repo with no release path drifts silently -- the README on npm is a different surface from the
+# README on GitHub, and only one of them is what an installer reads.
+#
+# Trusted publishing (OIDC), not a token, deliberately: npm is removing direct publish from
+# bypass-2FA granular tokens in January 2027, so a token-based workflow would be built already
+# knowing its expiry date. This needs no NPM_TOKEN secret at all, and because the repo and the
+# package are both public it stamps provenance automatically.
+#
+# Requires the trusted publisher to be configured at
+# npmjs.com/package/reviewedby-schema/access -> Trusted Publisher -> GitHub Actions, with
+# workflow filename `publish.yml`. npm does not validate that config when saved; a mismatch
+# surfaces here as ENEEDAUTH.
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  id-token: write # the OIDC token trusted publishing exchanges for a short-lived npm credential
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest # self-hosted runners are not supported for trusted publishing
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          # 22.14+ is the floor for trusted publishing. This is the CI runtime only -- the package
+          # itself still supports the `engines.node >=18` it declares.
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      # The tag is the trigger, so a tag that disagrees with package.json would publish a version
+      # nobody asked for, under a name nobody can retract. Fail before that reaches the registry.
+      - name: Tag must match package.json version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg="$(node -p "require('./package.json').version")"
+          if [ "$tag" != "$pkg" ]; then
+            echo "::error::tag v$tag does not match package.json version $pkg"
+            exit 1
+          fi
+          echo "publishing $pkg"
+
+      # Zero dependencies and no lockfile by design, so there is nothing to install.
+      - run: npm test
+
+      - run: npm publish
