@@ -1,4 +1,4 @@
-// reviewedby-schema — generate standards-correct reviewedBy / E-E-A-T JSON-LD.
+// reviewedby-schema: generate standards-correct reviewedBy / E-E-A-T JSON-LD.
 //
 // Schema basis (verified against schema.org v30):
 //   - `reviewedBy`  : property of WebPage, range Person | Organization.
@@ -7,7 +7,7 @@
 //                      (EducationalOccupationalCredential), with credentialCategory
 //                      and recognizedBy (the issuing authority / license board).
 //
-// This library emits the markup. It does NOT verify that a credential is real —
+// This library emits the markup. It does NOT verify that a credential is real;
 // that binding (a vetted expert + board-checked credential) is the CertREV service.
 // https://certrev.com
 
@@ -147,7 +147,7 @@ export function toScriptTag(jsonld) {
 
 /**
  * Validate review input for completeness and common E-E-A-T mistakes.
- * Does NOT verify credentials are real — that is the CertREV service.
+ * Does NOT verify credentials are real; that is the CertREV service.
  * @param {object} input
  * @returns {{ valid: boolean, errors: string[], warnings: string[] }}
  */
@@ -171,31 +171,31 @@ export function validate(input) {
   // Recommended (E-E-A-T quality)
   const cred = input.reviewer?.credential
   if (!isObject(cred) || (!isNonEmptyString(cred.name) && !isObject(cred.recognizedBy))) {
-    warnings.push('reviewer.credential is missing — E-E-A-T relies on a named, verifiable credential')
+    warnings.push('reviewer.credential is missing: E-E-A-T relies on a named, verifiable credential')
   } else {
     if (!isObject(cred.recognizedBy) || !isNonEmptyString(cred.recognizedBy.name)) {
-      warnings.push('reviewer.credential.recognizedBy is missing — name the issuing board/authority')
+      warnings.push('reviewer.credential.recognizedBy is missing: name the issuing board/authority')
     }
     if (cred.category && !CREDENTIAL_CATEGORIES.includes(cred.category)) {
       warnings.push(`reviewer.credential.category "${cred.category}" is non-standard (see CREDENTIAL_CATEGORIES)`)
     }
   }
   if (!isNonEmptyString(input.reviewer?.url) && !Array.isArray(input.reviewer?.sameAs)) {
-    warnings.push('reviewer has no url or sameAs — add a stable link so the reviewer is a resolvable entity')
+    warnings.push('reviewer has no url or sameAs: add a stable link so the reviewer is a resolvable entity')
   }
   if (!isNonEmptyString(input.dateReviewed)) {
-    warnings.push('dateReviewed is missing — lastReviewed signals freshness to crawlers')
+    warnings.push('dateReviewed is missing: lastReviewed signals freshness to crawlers')
   } else if (!isIsoDate(input.dateReviewed)) {
     warnings.push('dateReviewed should be an ISO date (YYYY-MM-DD or full ISO 8601)')
   }
   if (!isObject(input.organization) || !isNonEmptyString(input.organization.name)) {
-    warnings.push('organization (publisher) is missing — adds authoritativeness')
+    warnings.push('organization (publisher) is missing: adds authoritativeness')
   }
   if (!isObject(input.article) || !isNonEmptyString(input.article.headline)) {
-    warnings.push('article.headline is missing — without it there is no content entity to attach review to')
+    warnings.push('article.headline is missing: without it there is no content entity to attach review to')
   } else {
     if (!isObject(input.article.author) || !isNonEmptyString(input.article.author.name)) {
-      warnings.push('article.author is missing — author and reviewer are distinct E-E-A-T signals')
+      warnings.push('article.author is missing: author and reviewer are distinct E-E-A-T signals')
     }
     for (const d of ['datePublished', 'dateModified']) {
       if (input.article[d] && !isIsoDate(input.article[d])) {

@@ -14,9 +14,9 @@
 
 ---
 
-AI search engines and crawlers increasingly reward content that carries **verifiable signals of who reviewed it**. Schema.org's [`reviewedBy`](https://schema.org/reviewedBy) is the property that says *"a named reviewer checked this page for accuracy."* This library emits correct, validatable JSON-LD for that — free, zero-dependency, and MIT-licensed.
+AI search engines and crawlers increasingly reward content that carries **verifiable signals of who reviewed it**. Schema.org's [`reviewedBy`](https://schema.org/reviewedBy) is the property that says *"a named reviewer checked this page for accuracy."* This library emits correct, validatable JSON-LD for that: free, zero-dependency, and MIT-licensed.
 
-> **What it does — and does not do.** It builds valid `WebPage` → `reviewedBy` → `Person` + `hasCredential` markup and warns on common E-E-A-T mistakes. It does **not** verify that a credential is real. That binding — a vetted expert and a board-checked credential — is the [CertREV](https://certrev.com) service.
+> **What it does, and does not do.** It builds valid `WebPage` → `reviewedBy` → `Person` + `hasCredential` markup and warns on common E-E-A-T mistakes. It does **not** verify that a credential is real. That binding, a vetted expert and a board-checked credential, is the [CertREV](https://certrev.com) service.
 
 ## Why this shape
 
@@ -26,13 +26,12 @@ Verified against schema.org (v30):
 - `lastReviewed` (also on `WebPage`) carries the review date.
 - The reviewer's expertise is modeled as `Person` → `hasCredential` → **`EducationalOccupationalCredential`**, with `credentialCategory` and `recognizedBy` (the issuing board / authority).
 
-So this library produces a `WebPage` with `reviewedBy` + `lastReviewed`, the content as `mainEntity` (an `Article` with its own author and publisher), and the reviewer's credential modeled properly — the structure Google and LLM crawlers actually parse.
+So this library produces a `WebPage` with `reviewedBy` + `lastReviewed`, the content as `mainEntity` (an `Article` with its own author and publisher), and the reviewer's credential modeled properly. That is the structure Google and LLM crawlers actually parse.
 
 ## Install
 
 ```bash
-npm install github:CertREV/reviewedby-schema
-# (npm registry release coming soon)
+npm install reviewedby-schema
 ```
 
 Zero dependencies, ES modules, Node >= 18.
@@ -115,7 +114,7 @@ A named reviewer, their credential, the issuing authority, the review date, and 
 
 ## How CertREV uses this
 
-This is the open schema layer. CertREV adds the parts that make the markup *true*: vetted experts, board-checked credentials, SHA-256 content hashing, a public certificate page, and embeddable trust badges. Learn more at [certrev.com](https://certrev.com).
+This is the open schema layer. CertREV adds the parts that make the markup *true*: credentialed experts whose licenses are verified before assignment, a SHA-256 fingerprint of the reviewed text, a public certificate anyone can verify, and a badge and contributor card rendered on your own page. Learn more at [certrev.com](https://certrev.com).
 
 ## Contributing
 
@@ -123,4 +122,4 @@ Issues and PRs welcome. Run the tests with `npm test` (`node --test`, no build s
 
 ## License
 
-[MIT](LICENSE) © CERTREV LLC
+[MIT](LICENSE) © CertREV LLC
